@@ -1,0 +1,74 @@
+﻿@model IEnumerable<COLONY_THE_BUGTRACKER.Models.Project>
+
+@{
+    ViewBag.Title = "My Project Index";
+}
+
+
+<style>
+   .hoverWhite:hover{
+       color: #134A54;
+       font-weight: bolder
+   }
+</style>
+@if (User.IsInRole("Admin")) 
+{ 
+<h2>
+    <a href="/Projects/Create" style="
+    margin-left: 12px;  text-decoration:
+        underline; font-weight: bold; font-family: Georgia, 'Times New Roman', Times, serif">Create New</a>
+</h2>
+}
+<hr />
+
+
+<div class="card" style="background-color:  #0074E1 ">
+    <table class="table table-bordered table-hover data-tables"
+           data-options='{ "paging": false; "searching":false}' id="example2">
+        <thead style="color: white">
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Created Date
+                </th>
+                <th>
+                    Updated Date
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody >
+            @foreach (var project in Model)
+            {
+                <tr class="hoverWhite" style="font-weight: bold">
+                    <td>
+                        @Html.DisplayFor(p => project.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(p => project.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(p => project.CreatedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(p => project.UpdatedDate)
+                    </td>
+                    <td>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            @Html.ActionLink("Project Details", "Details", "Projects", new { id = project.Id }, null)//get details acton get id.  have to put null here
+
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

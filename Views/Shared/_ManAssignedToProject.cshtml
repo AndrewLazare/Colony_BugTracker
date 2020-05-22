@@ -1,0 +1,18 @@
+﻿@using COLONY_THE_BUGTRACKER.Models
+@using COLONY_THE_BUGTRACKER.Utilities;
+@model Project
+@{
+      var projectHelper = new ProjectHelper();
+ }
+<div class="row">
+
+
+    <div class="col">
+        <h1 style="color: white; text-decoration: underline; text-align: right">Current Manager:</h1>
+    </div>
+    <div class="col">
+        <h1 style="color: white">@projectHelper.GetProjectManagerDisplayName(Model.Id)</h1>
+    </div>
+
+</div>
+

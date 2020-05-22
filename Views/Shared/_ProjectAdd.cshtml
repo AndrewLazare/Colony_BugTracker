@@ -1,0 +1,86 @@
+﻿@using COLONY_THE_BUGTRACKER.Utilities
+@model COLONY_THE_BUGTRACKER.Models.Project
+
+@{
+    ViewBag.Title = "Project Details";
+    var roleHelper = new RoleHelper();
+    var projectHelper = new ProjectHelper();
+}
+
+
+
+<header class="white pt-3 relative shadow  text-white" style="background-color: #0074e1">
+    <div class="container-fluid">
+        <div class="row p-t-b-10 ">
+            <div class="col">
+                <div class="pb-3">
+                    <div class="image mr-3  float-left">
+                    </div>
+                    <div>
+                        <h1 class="text-center">Assign/Remove Manager</h1>
+                        <h3 id="AssignedManagerDiv">
+                            <div class="row">
+                                <div class="col">
+                                    <h1 style="color: white; text-decoration: underline; text-align: right">Current Manager:</h1>
+                                </div>
+                                <div class="col">                          
+                                        <h1 style="color: white">@projectHelper.GetProjectManagerDisplayName(Model.Id)</h1>       
+                                </div>
+                            </div>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</header>
+<hr style="border: 1px solid #ffffff" />
+<div class="container-fluid animatedParent animateOnce my-3">
+    <div class="animated fadeInUpShort">
+
+        <!--#region ADD USER TO TICKET PERTIAL TAB-->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-hover data-tables" style="font-weight: bold">
+                    <thead style="background-color: #393E41; color: white">
+                        <tr>
+                            <th>
+                                Developer Name
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var manager in roleHelper.UsersInRole("Manager"))
+                        {
+                            <tr>
+                                <td>
+                                    @manager.FullName: @manager.Email
+                                </td>
+                                <td class="mycell">
+                                    <button type="submit" id="addManager-@manager.Id" style="background-color: #53dd6c; font-weight: bold">Add To Project</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+    </div>
+    <!--#endregion-->
+</div>
+
+
+
+
+

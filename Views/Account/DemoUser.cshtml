@@ -1,0 +1,243 @@
+﻿@using COLONY_THE_BUGTRACKER.Models
+@{
+
+    Layout = null;
+
+}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>Colony</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="~/Images/COLONYFAVICON.png">
+    <link href="~/Content/app.css" rel="stylesheet" />
+    <link href="~/Content/app.css" rel="stylesheet" />
+    <style>
+        <link href="~/Content/app.css" rel="stylesheet" / >
+        <style >
+        .logo_demouser--reset {
+            max-height: 500px;
+            max-width: 510px;
+        }
+    </style>
+</head>
+
+
+<body style="background-color: #fff">
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-4" style="align-content: center">
+            <img class="logo_demouser--reset" src="~/Images/colonyLogoFull.png" />
+
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-2"></div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-3">
+            <div class="col">
+                <div class="card no-b mb-3" style="background-color: #10E7DC; color: white; font-weight: bold">
+                    <div class="card-body" style="background-color: #0074E1">
+                        <div class="d-flex justify-content-between align-items-center">
+
+
+                        </div>
+                        <div class="text-center">
+                            <div class="s-48 my-3 focus number">Admin</div>
+                            <h4 style="color: white; font-weight: bold">
+                                <ul>
+                                    <li>
+                                        <strong>-View all projects and tickets.</strong>
+                                    </li>
+                                    <li>
+                                        <strong>
+                                            -Interact with all projects and tickets.
+                                        </strong>
+
+                                    </li>
+                                    <li>
+                                        <strong> -Assign and unassign users from roles.</strong>
+                                    </li>
+
+                                    <li>
+                                        <strong>-Create a project.</strong>
+                                    </li>
+
+                                </ul>
+                            </h4>
+                            @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.Hidden("emailKey", "DemoAdminEmail")
+                                <section class="panel">
+
+                                    <div class="panel-body">
+                                        <button type="submit" class="btn btn-lg btn-block" style="background-color: #9DA9A0; color: #3E505B; font-weight: bold">Log In As Demo Admin</button>
+                                    </div>
+                                </section>
+
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="col">
+                <div class="card no-b mb-3" style="background-color: #10E7DC; color: white; font-weight: bold">
+                    <div class="card-body" style="background-color: #0074E1">
+                        <div class="d-flex justify-content-between align-items-center">
+
+                        </div>
+                        <div class="text-center">
+                            <div class="s-48 my-3 focus number">Manager</div>
+                            <h4 style="color: white; font-weight: bold">
+                                <ul>
+                                    <li>
+                                        <strong> -View your projects and tickets.</strong>
+                                    </li>
+                                    <li>
+                                        <strong>  -Interact with your projects and their tickets.</strong>
+                                    </li>
+
+                                    <li>
+                                        <strong>  -Create a project.</strong>
+                                    </li>
+
+                                </ul>
+                            </h4>
+                            @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.Hidden("emailKey", "DemoPMEmail")
+                                <section class="panel">
+
+                                    <div class="panel-body">
+                                        <button type="submit" class="btn btn-lg btn-block" style="background-color: #9DA9A0; color: #3E505B; font-weight: bold">Log In As Demo Manager</button>
+                                    </div>
+                                </section>
+
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-md-3">
+            <div class="col">
+                <div class="card no-b mb-3" style="background-color: #10E7DC; color: white; font-weight: bold">
+                    <div class="card-body" style="background-color: #0074E1">
+                        <div class="d-flex justify-content-between align-items-center">
+
+                        </div>
+                        <div class="text-center">
+                            <div class="s-48 my-3 focus number">Developer</div>
+                            <h4 style="color: white; font-weight: bold">
+                                <ul>
+                                    <li>
+                                        <strong>  -View tickets that you are assigned to and their projects.</strong>
+                                    </li>
+                                    <li>
+                                        <strong>  -Interact with with the tickes you are assigned to.</strong>
+                                    </li>
+                                </ul>
+                            </h4>
+                            @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.Hidden("emailKey", "DemoDeveloperEmail")
+                                <section class="panel">
+
+                                    <div class="panel-body">
+                                        <button type="submit" class="btn btn-lg btn-block" style="background-color: #9DA9A0; color: #3E505B; font-weight: bold">Log In As Demo Developer</button>
+                                    </div>
+                                </section>
+
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="col">
+
+                <div class="card no-b mb-3" style="background-color: #10E7DC; color: white; font-weight: bold">
+                    <div class="card-body" style="background-color: #0074E1">
+                        <div class="d-flex justify-content-between align-items-center">
+
+                        </div>
+                        <div class="text-center">
+                            <div class="s-48 my-3 focus number">Submitter</div>
+                            <h4 style="color: white; font-weight: bold">
+                                <ul>
+                                    <li>
+                                        <strong>  -View tickets that you own and their projects.</strong>
+                                    </li>
+                                    <li>
+                                        <strong>  -Create tickets</strong>
+                                    </li>
+                                    <li>
+                                        <strong>  -Interact with with the tickets you own.</strong>
+                                    </li>
+                                </ul>
+                            </h4>
+                            @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.Hidden("emailKey", "DemoSubmitterEmail")
+                                <section class="panel">
+
+                                    <div class="panel-body">
+                                        <button type="submit" class="btn btn-lg btn-block" style="background-color: #9DA9A0; color: #3E505B; font-weight: bold">Log In As Demo Submitter</button>
+                                    </div>
+                                </section>
+
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row"></div>
+    <div class="row"></div>
+</body>
+
+
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/app.js"></script>
+<script>
+    $('#myTable, .table').DataTable();
+</script>
+<script src="~/Scripts/tinymce/tinymce.min.js"></script>
+<script src="~/Scripts/tinymce/jquery.tinymce.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        tinymce.init({
+            selector: '#editor'
+        });
+    });
+</script>

@@ -1,0 +1,114 @@
+﻿@model COLONY_THE_BUGTRACKER.Models.Ticket
+@using COLONY_THE_BUGTRACKER.Utilities;
+@{
+    var tickHelper = new TicketHelper();
+    var roleHelper = new RoleHelper();
+}
+<style>
+    .cntrlWide {
+        width: 100%
+    }
+</style>
+<style>
+    .mycell {
+        max-width: 40px;
+    }
+</style>
+<header class="white pt-3 relative shadow  text-white" style="background-color: #0074e1">
+    <div class="container-fluid">
+        <div class="row p-t-b-10 ">
+            <div class="col">
+                <div class="pb-3">
+                    <div class="image mr-3  float-left">
+                    </div>
+                    <div>
+
+                        <h1 class="text-center">Assign/Remove Developer</h1>
+                        <h3 id="AssignedDeveloperDiv">
+
+                            <div class="row">
+
+                                <div class="col">
+                                    <h1 style="color: white; text-decoration: underline; text-align: right">Current Developer:</h1>
+                                </div>
+                                <div class="col">
+                                    @if (Model.AssignedToUserId != null)
+                                    {
+                                        <h1 style="color: white">@Model.AssignedToUser.FullName</h1>
+                                    }
+                                </div>
+                            </div>
+                        </h3>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+   
+</header>
+<hr style="border: 1px solid #ffffff" />
+<div class="container-fluid animatedParent animateOnce my-3">
+    <div class="animated fadeInUpShort">
+
+        <!--#region ADD USER TO TICKET PERTIAL TAB-->
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+
+
+
+                <table class="table table-bordered table-hover data-tables" style="font-weight: bold">
+                    <thead style="background-color: #393E41; color: white">
+                        <tr>
+                            <th>
+                                Developer Name
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in roleHelper.UsersInRole("Developer"))
+                        {
+
+
+                            <tr style="backgrou">
+                                <td>
+                                    @user.FullName: @user.Email
+                                </td>
+                                <td class="mycell">
+                                    <button type="submit" id="addUser-@user.Id" style="background-color: #70AE6E; font-weight: bold">Add To Ticket</button>
+                                </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+    </div>
+    <!--#endregion-->
+</div>
+
+
+
+
+
+
+
+
+

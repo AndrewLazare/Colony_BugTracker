@@ -1,0 +1,335 @@
+﻿@using COLONY_THE_BUGTRACKER.Utilities
+@model COLONY_THE_BUGTRACKER.Models.Project
+
+@{
+    ViewBag.Title = "Project Details";
+    var roleHelper = new RoleHelper();
+    var projectHelper = new ProjectHelper();
+}
+<style>
+    .cntrlWide {
+        width: 100%
+    }
+
+    .header_resize {
+        letter-spacing: 3px;
+        font-size: 35px;
+        color: white;
+    }
+</style>
+
+
+<header class="white pt-3 relative shadow  text-white">
+    <div class="container-fluid">
+        <div class="row p-t-b-10 ">
+            <div class="col">
+                <div class="pb-3">
+                    <div class="image mr-3  float-left">
+                    </div>
+                    <div>
+                        <h6 class="header_resize" style=" text-decoration: underline; text-decoration-color: white; text-align: center">@Html.DisplayFor(model => model.Name)</h6>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <ul class="nav nav-material responsive-tab" id="v-pills-tab" role="tablist">
+                <li>
+                    <a class="nav-link active" id="v-pills-tab1-tab" data-toggle="pill" href="#v-pills-tab1" role="tab" aria-controls="v-pills-tab1" style="color: white">
+                        <i class="icon icon-home2" style="color: #699E70"></i>Home
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" id="v-pills-tick-tab" data-toggle="pill" href="#v-pills-tick" role="tab" aria-controls="v-pills-tick" aria-selected="false" style="color: white"><i class="icon icon-ticket" style="color: #699E70"></i>Tickets</a>
+                </li>
+                <li>
+                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false" style="color: white"><i class="icon icon-cog" style="color: #699E70"></i>Edit Project</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid animatedParent animateOnce my-3">
+    <div class="animated fadeInUpShort">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-tab1" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                <!--#region USERS ON PROJ-->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-lg-12">
+                                <div class="card">
+                                    <div class="card-header white text-center">
+                                        <h4 class="number" style="color: white; font-weight: bold">Collective Ticket Priority</h4>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div id="graph_donut1" class="height-300"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-lg-12">
+                                <div class="card card1">
+                                    <div class="card-header white text-center">
+                                        <h4 class="number" style="color: white; font-weight: bold">Collective Ticket Priority</h4>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div id="graph_donut2" class="height-300"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!--#endregion-->
+
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card summaryTicket" style="background-color:!important  white">
+                                    <div class="card-body text-center">
+                                        <p style="color:!important white">
+                                            <h1 class="number header_resize" style="color: !important #3a3f42"><strong>Project Description</strong></h1>
+                                            <hr style="border: 1px solid; color: #3a3f42" />
+                                            <h5 class="number" style="color: white; font-weight: bold">@Html.Raw(Model.Description)</h5>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="col">
+                            <div class="card" style="left: -2px; right: 2px">
+                                @Html.Partial("_ProjectSubDevPartial", Model)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--#region TICKETS ON PROJ TAB-->
+
+            <div class="tab-pane fade" id="v-pills-tick" role="tabpanel" aria-labelledby="v-pills-tick-tab">
+                <div class="container-fluid my-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card no-b" style="background-color:  #0074E1; font-weight: bold">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-hover data-tables"
+                                           id="myTable">
+                                        <thead style="background-color: #3a3f42; color: white">
+                                            <tr>
+                                                <th>
+                                                    Owner
+                                                </th>
+                                                <th>
+                                                    Priority
+                                                </th>
+                                                <th>
+                                                    Project
+                                                </th>
+                                                <th>
+                                                    Status
+                                                </th>
+                                                <th>
+                                                    Type
+                                                </th>
+                                                <th>
+                                                    Title
+                                                </th>
+                                                <th>
+                                                    CreatedDate
+                                                </th>
+                                                <th>
+                                                    UpdatedDate
+                                                </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var ticket in Model.Tickets)
+                                            {
+                                                <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("Details", "Tickets", new { id = ticket.Id })'">
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => ticket.Owner.FirstName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => ticket.Priority.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => ticket.Project.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => ticket.Status.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => ticket.Type.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => ticket.Title)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => ticket.CreatedDate)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => ticket.UpdatedDate)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Details", "Details", "Tickets", new { id = ticket.Id }, null)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!--#endregion-->
+            <!--#region EDIT PROJ TAB-->
+            <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                <div class="row">
+                    <div class="col">
+                        <div class="card" style="background-color:  #0074E1; left: -16px; right: 16px">
+                            <div class="card-body align-items-center">
+                                @using (Html.BeginForm("Edit", "Projects", FormMethod.Post, new { @class = "form-horizontal" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.Id)
+                                    @Html.HiddenFor(model => model.CreatedDate)
+
+                                    <div class="form-group">
+                                        <h3 style=" color: white"><label for="inputName" class="col-sm-4 control-label">Name</label></h3>
+
+                                        <div class="col-md-12">
+                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <h3 style="color: white"><label for="inputDescription" class="col-sm-4 control-label">Description</label></h3>
+
+                                        <div class="col-md-12">
+                                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "mceEditor" } })
+                                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="submit" class="btn" style=" background-color: #70AE6E; color: white">Submit</button>
+                                        </div>
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="col">
+                            <div class="card" style="left: 16px; right: -16px">
+                                <div class="card-body">
+                                    @Html.Partial("_ProjectAdd", Model)
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!--#endregion-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--/#app -->
+@section Scripts{
+
+
+
+    <script>
+          $(function () {
+                                            var url = '@Url.Action("ProduceChartData1", "Graphing")';
+                                            $.post(url).then(function(response) {
+                                            new Morris.Donut({
+                                            element: 'graph_donut1',
+                                            data: response,
+                                            xkey: 'label',
+                                            ykey: ['value'],
+                                            labels: ['Ticket Count'],
+                                            labelColor: '#fff',
+                                             resize: true
+                                             });
+
+                                        });
+                                        });
+
+    </script>
+
+    <script>
+      $(function () {
+        var url = '@Url.Action("ProduceChartData2", "Graphing")';
+        $.post(url).then(function (response) {
+                                            new Morris.Donut({
+                                            element: 'graph_donut2',
+                                            data: response,
+                                             xkey: 'label',
+                                             ykey: ['value'],
+                                             labels: ['Ticket Count'],
+                                             labelColor: '#fff',
+                                             resize: true
+                                             });
+
+                                        });
+                                        });
+
+    </script>
+
+
+
+
+
+
+    <script>
+                                     @foreach(var manager in roleHelper.UsersInRole("Manager"))
+                                     {
+
+                                       @:$("#addManager-@manager.Id").click(function() {
+                                       @:    $.ajax({
+                                       @:        type: "POST",
+                                       @:        url: '@Url.Action("AjaxAddManager", "Admin")',
+                                       @:        data: { id: '@manager.Id', projectId: @Model.Id },
+                                       @:        success: function (partial)
+                                       @:           {
+                                       @:
+                                       @:              $("#AssignedManagerDiv").html(partial)
+                                       @:           }
+                                       @:
+                                       @:    });
+                                       @:})
+                                                    }
+
+    </script>
+
+
+
+
+}
+
+
+
+

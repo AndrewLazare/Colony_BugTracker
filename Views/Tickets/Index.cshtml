@@ -1,0 +1,90 @@
+﻿@model IEnumerable<COLONY_THE_BUGTRACKER.Models.Ticket>
+   
+@{
+
+        ViewBag.Title = "My Tickets";
+
+}
+   
+
+ 
+
+    <div class="card" style="background-color:  #0074E1 ">
+
+        @if (User.IsInRole("Submitter"))
+        {
+
+            <h2>
+                <a href="/Tickets/Create" style="color: white; font-weight: bold;
+    margin-left: 12px;  text-decoration:
+        underline;">Click Here To Create A New Ticket</a>
+            </h2>
+        } 
+        <hr />
+        <table class="table table-bordered table-hover data-tables"
+               data-options='{ "paging": false; "searching":false}' id="example2">
+            <thead style="color: white">
+                <tr>
+                    <th>
+                        Project Name
+                    </th>
+                    <th>
+                        Owner
+                    </th>
+                    <th>
+                        Priority
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Created Date
+                    </th>
+                    <th>
+                        Updated Date
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Project.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Owner.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Priority.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedDate)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Details", "Details", new { id = item.Id })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

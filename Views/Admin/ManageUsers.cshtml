@@ -1,0 +1,67 @@
+﻿@model IEnumerable<COLONY_THE_BUGTRACKER.Models.ManageProjectsViewModel>
+@{
+    ViewBag.Title = "ManageUsers";
+}
+
+
+<h2>ManageUsers</h2>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-sm-offset-6">
+        <div class="row">
+            <div class="col-md-6">
+                @Html.ListBox("UserIds", null)
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.DropDownList("ManageUsers", null, "-- Select Project --")
+        </div>
+
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary cntrlWide">Submit</button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <table class="table" id="myTable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Fullname")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Project")
+                    </th>
+
+            </thead>
+            <tbody>
+                <tr>
+                    @foreach (var project in Model)
+                    {
+
+                        <td>
+
+                            @project.Name
+                        </td>
+                        <td>
+
+                            @project.Name
+                        </td>
+
+                    }
+                </tr>
+            </tbody>
+
+
+
+        </table>
+    </div>
+
+
+
+
+}

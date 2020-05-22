@@ -1,0 +1,76 @@
+﻿@using COLONY_THE_BUGTRACKER.Models
+@using Microsoft.AspNet.Identity
+@model UserProfileViewModel
+@{
+    var db = new ApplicationDbContext();
+    var user = db.Users.Find(User.Identity.GetUserId());
+}
+
+@using (Html.BeginForm("EditProfile", "Admin", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+{
+    @Html.Hidden("editId", Model.Id)
+
+    @Html.AntiForgeryToken();
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group" style="font-weight: bold; color: #272c33">
+                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-6" })
+
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-6" })
+
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                @Html.LabelFor(model => model.OldPassword, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(model => model.OldPassword, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.OldPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.NewPassword, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(model => model.NewPassword, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.NewPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-10" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            @if (user.AvatarPath == null)
+            {
+
+                <img src="~/Avatars/default_user.png" />
+            }
+            @if (user.AvatarPath != null)
+            {
+                <img src="@user.AvatarPath" />
+            }
+
+
+            @Html.Editor("Avatar", null, new { htmlAttributes = new { @class = "form-control", type = "file" } })
+        </div>
+    </div>
+    <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-danger">Save Changes</button>
+    </div>
+}

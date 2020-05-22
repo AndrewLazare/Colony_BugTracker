@@ -1,0 +1,93 @@
+﻿@using COLONY_THE_BUGTRACKER.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+    Layout = null;
+}
+  }
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+
+        <title>Colony</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="~/Images/COLONYFAVICON.png">
+        <link href="~/Content/app.css" rel="stylesheet" />
+        <link href="~/Content/app.css" rel="stylesheet" />
+        <style>
+            .loginButton {
+                background-color: #134A54;
+                font-weight: 700;
+                color: #e8f0fe;
+                border-color: #e8f0fe;
+                border-width: 4px
+            }
+
+            .logo_login--reset {
+                max-height: 200px;
+                max-width: 175px;
+            }
+        </style>
+    </head>
+
+<style>
+    .loginButton {
+        background-color: #134A54;
+        font-weight: 700;
+        color: #e8f0fe;
+        border-color: #e8f0fe;
+        border-width: 4px
+    }
+
+    .logo_login--reset {
+        max-height: 200px;
+        max-width: 175px;
+    }
+</style>
+
+<link href="~/Content/app.css" rel="stylesheet" />
+  
+
+<div id="primary" class="p-t-b-100 height-full">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mx-md-auto paper-card">
+                <div class="text-center">
+
+                    <img class="logo_login--reset" src="~/Images/COLONYFINALLOGOSMALL.png" />
+
+
+                    <h1 class="number"><strong style="color: #393E41">Welcome Back</strong></h1>
+                    <h5 style="color: #70AE6E; text-decoration: underline; font-size: large; font-weight: bold">@Html.ActionLink("Sign In As Demo User", "DemoUser")</h5>
+                </div>
+
+
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group has-icon">
+                        <i class="icon-envelope-o"></i>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg", placeholder = "Email Address" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group has-icon">
+                        <i class="icon-user-secret"></i>
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-lg", placelder = "Password" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+                    </div>
+                    <input type="submit" class="btn btn-lg btn-block" value="Log In" style=" background-color: #0074E1; color: white; font-weight: bold">
+
+                    <h5 style=" text-decoration: underline; font-size: large; font-weight: bold; color: #393E41">@Html.ActionLink("Forgot Password?", "ForgotPassword")</h5>
+                    <h5 style=" text-decoration: underline; font-size: large; font-weight: bold; color: #393E41">@Html.ActionLink("Register as a new user", "Register")</h5>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

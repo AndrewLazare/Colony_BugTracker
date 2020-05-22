@@ -1,0 +1,56 @@
+﻿@model COLONY_THE_BUGTRACKER.Models.Ticket
+@using COLONY_THE_BUGTRACKER.Utilities;
+@{
+    var tickHelper = new TicketHelper();
+    var roleHelper = new RoleHelper();
+}
+<style>
+    .cntrlWide {
+        width: 100%
+    }
+</style>
+<header class="white pt-3 relative shadow  text-white">
+    <div class="container-fluid">
+        <div class="row p-t-b-10 ">
+            <div class="col">
+                <div class="pb-3">
+                    <div class="image mr-3  float-left">
+                    </div>
+                    <div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="col">
+    <div class="card">
+        <div class="card-header text-center"><h1>Developer</h1></div>
+        <div class="card card-body devText">
+
+
+
+
+
+
+
+
+
+            @foreach (var user in tickHelper.ListUsersOnTicket(Model.Id))
+            {
+
+
+                <span>@user.FullName</span>
+
+
+            }
+
+
+
+        </div>
+    </div>
+
+</div>

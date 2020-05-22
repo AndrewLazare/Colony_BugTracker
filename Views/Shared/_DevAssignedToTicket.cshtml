@@ -1,0 +1,18 @@
+﻿@using COLONY_THE_BUGTRACKER.Models
+@model Ticket
+
+<div class="row">
+    
+        
+            <div class="col">
+                <h1 style="color: white; text-decoration: underline; text-align: right">Current Developer:</h1>
+            </div>
+            <div class="col">
+                @if (Model.AssignedToUserId != null)
+                {
+                    <h1 style="color: white">@Model.AssignedToUser.FullName</h1>
+                }
+            </div>
+       
+    </div>
+

@@ -1,0 +1,649 @@
+﻿@using COLONY_THE_BUGTRACKER.Utilities;
+@using COLONY_THE_BUGTRACKER.Models
+@using Microsoft.AspNet.Identity
+
+@model COLONY_THE_BUGTRACKER.Models.TicketViewModel
+
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    TicketHelper ticketHelper = new TicketHelper();
+    RoleHelper roleHelper = new RoleHelper();
+}
+
+<!--#region Style To Be Moved-->
+<style>
+    .card-body-history {
+        flex: 1 1 auto;
+        padding: 1.25rem;
+        background-color: #134A54;
+    }
+</style>
+
+<style>
+    .cntrlWide {
+        width: 100%
+    }
+</style>
+<style>
+    .indexCard {
+        color: white
+    }
+</style>
+<style>
+    .summaryTicket {
+        width: 100%;
+        height: 100%
+    }
+</style>
+<style>
+    .SPTCard {
+        height: 200px;
+        top: 20px;
+        bottom: -20px
+    }
+
+    .header_resize {
+        letter-spacing: 3px;
+        font-size: 48px;
+        color: white;
+        text-align: center;
+    }
+
+    .header_resize_sub {
+        letter-spacing: 3px;
+        font-size: 20px;
+        color: white;
+    }
+
+    .header_resize_sub_right {
+        letter-spacing: 3px;
+        font-size: 20px;
+        color: white;
+        text-align: right;
+    }
+
+    .header_resize_sub_right_purple {
+        letter-spacing: 3px;
+        font-size: 20px;
+        color: white;
+        text-align: right;
+        color: #9C92A3;
+    }
+
+    .header_resize_subTicket {
+        letter-spacing: 3px;
+        font-size: 30px;
+        color: white;
+    }
+</style>
+<!--#endregion-->
+<header class="white pt-3 relative shadow">
+    <div class="container-fluid">
+        <div class="row p-t-b-10 ">
+            <div class="col">
+                <div class="pb-3">
+                    <div class="image mr-3  float-left">
+                    </div>
+                    <div>
+                        <h1 class="number header_resize"><u style="text-decoration-color: #70AE6E">Title:</u> @Html.DisplayFor(model => model.Ticket.Title)</h1>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <ul class="nav nav-material responsive-tab" id="v-pills-tab" role="tablist">
+                    <li>
+                        <a class="nav-link active" id="v-pills-tab1-tab" data-toggle="pill" href="#v-pills-tab1" role="tab" aria-controls="v-pills-tab1" style="color: white">
+                            <i class="icon icon-home2"></i>Home
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="v-pills-com-tab" data-toggle="pill" href="#v-pills-com" role="tab" aria-controls="v-pills-com" aria-selected="false" style="color: white"><i class="icon icon-cog"></i>Comments</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="v-pills-timeline-tab" data-toggle="pill" href="#v-pills-timeline" role="tab" aria-controls="v-pills-timeline" aria-selected="false" style="color: white"><i class="icon icon-cog"></i>History</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false" style="color: white"><i class="icon icon-cog"></i>Edit Ticket</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3 class="number header_resize_sub_right"><u style="text-decoration-color: #70AE6E">@Html.DisplayFor(model => model.Ticket.Project.Name):</u></h3><h3 class="number header_resize_sub_right_purple" style="color: #70AE6E"> @Html.ActionLink("Click for details!", "Details", "Projects", new { id = Model.Ticket.Project.Id }, null) </h3>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid animatedParent animateOnce my-3">
+    <div class="animated fadeInUpShort">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-tab1" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                <div class="row">
+                    <!--#region Attachments-->
+                    <div class="col-md-5">
+                        <div class="card mt-3 mb-3" style="margin-top: 0px; height: 105.5%; background-color: #0074e1">
+                            <h1 class="number text-center" style="color: white; text-align:justify">Ticket Attachments</h1>
+                            <hr style="border: 1px solid #70AE6E" />
+                            <table class="table table-bordered table-hover data-tables" style="font-weight: bold">
+                                <thead style="background-color: #3a3f42; color: white">
+                                    <tr>
+                                        <th>
+                                            Created Date
+                                        </th>
+                                        <th>
+                                            Owner
+                                        </th>
+                                        <th>
+                                            Link
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var loop = 1;
+                                    }
+                                    @foreach (var attach in Model.Ticket.Attachments)
+                                    {
+                                        var deleteModalId = "deleteModalId" + loop;
+                                        if (attach.UploadDate != null || attach.FilePath != null || attach.User != null)
+                                        {
+                                            <tr>
+                                                <td>
+
+                                                    @attach.UploadDate
+                                                </td>
+                                                <td>
+                                                    @attach.User.FullName
+                                                </td>
+                                                <td>
+                                                    <a href=@Url.Content(attach.FilePath) target="_blank">@attach.FilePath.Split('/')[2]</a>
+                                                </td>
+                                                <td>
+                                                    <a style="cursor: pointer; font-weight: bold" data-toggle="modal" data-target="#@deleteModalId">
+                                                        Delete
+
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @*Delete*@
+                                        <div class="modal fade" id=@deleteModalId tabindex="-1" role="dialog" aria-labelledby="deleteBudgetModalTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                <div class="modal-content">
+
+
+                                                    <div class="modal-header text-center" style="background-color: #1c8ea0">
+                                                        <h3 class="modal-title " id="deleteBudgetModalTitle" style="color: #ffffff">Delete This Budget</h3>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    @using (Html.BeginForm("Delete", "TicketAttachments", new { id = attach.Id }, FormMethod.Post))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+
+
+
+                                                        <div class="modal-body" style="color: black; font-weight: bold">
+
+
+
+                                                            <h4>Are you sure!?</h4>
+
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn" style="background-color: #ba3644; color: white">Delete</button>
+                                                        </div>
+
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        loop++;
+                                    }
+
+                                    }
+
+                            </table>
+                        </div>
+                    </div>
+                    <!--#endregion-->
+
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card summaryTicket" style="background-color: #134A54">
+                                    <div class="card-body text-center">
+                                        <p style="color: #B9E3C6">
+                                            <h1 class=" number header_resize_subTicket">@Html.DisplayNameFor(model => model.Ticket.Summary)</h1>
+                                            <hr style="border: 1px solid #70AE6E" />
+                                            <h4 class="number" style="color: white"> @Html.Raw(Model.Ticket.Summary)</h4>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <!--#region Status Card Style-->
+                            @if (Model.Ticket.Status.Id == 2)
+                            {
+                                <div class="col-lg-4">
+                                    <div class="card r-3 SPTCard" style="border-color: #E0CA3C">
+                                        <div class="p-4">
+                                            <div class="float-right">
+                                            </div>
+                                            <div class="text-center"><h3 class="header_resize_sub" style="color: #E0CA3C"><strong>@Html.DisplayNameFor(model => model.Ticket.Status)</strong> </h3></div>
+                                            <hr style="border: 1px solid #E0CA3C" />
+                                            <h2 class="text-center header_resize_subTicket" style="color: #E0CA3C"><strong>@Html.DisplayFor(model => model.Ticket.Status.Name)</strong></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.Ticket.Status.Id == 1)
+                            {
+                                <div class="col-lg-4">
+                                    <div class="card r-3 SPTCard" style="border-color: #F75C03">
+                                        <div class="p-4">
+                                            <div class="float-right">
+                                            </div>
+                                            <div class="text-center"><h3 class="header_resize_sub" style="color: #F75C03"><strong>@Html.DisplayNameFor(model => model.Ticket.Status)</strong></h3></div>
+                                            <hr style="border: 1px solid #F75C03" />
+                                            <h2 class="text-center header_resize_subTicket" style="color: #F75C03"><strong>@Html.DisplayFor(model => model.Ticket.Status.Name)</strong></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.Ticket.Status.Id == 3)
+                            {
+                                <div class="col-lg-4">
+                                    <div class="card r-3 SPTCard" style="border-color: #70AE6E">
+                                        <div class="p-4">
+                                            <div class="float-right">
+                                            </div>
+                                            <div class="text-center"><h3 class="header_resize_sub" style="color: #70AE6E"><strong>@Html.DisplayNameFor(model => model.Ticket.Status)</strong></h3></div>
+                                            <hr style="border: 1px solid #70AE6E" />
+                                            <h2 class="text-center header_resize_subTicket" style="color: #70AE6E"><strong>@Html.DisplayFor(model => model.Ticket.Status.Name)</strong></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.Ticket.Status.Id == 4)
+                            {
+                                <div class="col-lg-4">
+                                    <div class="card r-3 SPTCard" style="border-color: #70AE6E">
+                                        <div class="p-4">
+                                            <div class="float-right">
+                                            </div>
+                                            <div class="text-center"><h3 class="header_resize_sub" style="color: #70AE6E"><strong>@Html.DisplayNameFor(model => model.Ticket.Status)</strong></h3></div>
+                                            <hr style="border: 1px solid #70AE6E" />
+                                            <h2 class="text-center header_resize_subTicket" style="color: #70AE6E"><strong>@Html.DisplayFor(model => model.Ticket.Status.Name)</strong></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <!--#endregion-->
+                            <!--#region Priority Card Style-->
+                            @if (Model.Ticket.Priority.Name == "Medium")
+                            {
+                                <div class="col-lg-4">
+                                    <div class="card r-3 SPTCard" style="border-color: #E0CA3C">
+                                        <div class="p-4">
+                                            <div class="float-right">
+                                            </div>
+                                            <div class="text-center"><h3 class="header_resize_sub" style="color: #E0CA3C"><strong>@Html.DisplayNameFor(model => model.Ticket.Priority)</strong></h3></div>
+                                            <hr style="border: 1px solid #E0CA3C" />
+                                            <h2 class="text-center header_resize_subTicket" style="color: #E0CA3C"><strong>@Html.DisplayFor(model => model.Ticket.Priority.Name)</strong></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.Ticket.Priority.Name == "High")
+                            {
+                                <div class="col-lg-4">
+                                    <div class="card r-3 SPTCard" style="border-color: #DB5461">
+                                        <div class="p-4">
+                                            <div class="float-right">
+                                            </div>
+                                            <div class="text-center"><h3 class="header_resize_sub" style="color: #DB5461"><strong>@Html.DisplayNameFor(model => model.Ticket.Priority)</strong></h3></div>
+                                            <hr style="border: 1px solid #DB5461" />
+                                            <h2 class="text-center header_resize_subTicket" style="color: #DB5461"><strong>@Html.DisplayFor(model => model.Ticket.Priority.Name)</strong></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.Ticket.Priority.Name == "Low")
+                            {
+                                <div class="col-lg-4">
+                                    <div class="card r-3 SPTCard" style="border-color: #70AE6E">
+                                        <div class="p-4">
+                                            <div class="float-right">
+                                            </div>
+                                            <div class="text-center"><h3 class="header_resize_sub" style="color: #00c853"><strong>@Html.DisplayNameFor(model => model.Ticket.Priority)</strong></h3></div>
+                                            <hr style="border: 1px solid #81A684" />
+                                            <h2 class="text-center header_resize_subTicket" style="color: #00c853"><strong>@Html.DisplayFor(model => model.Ticket.Priority.Name)</strong></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <!--#endregion-->
+                            <div class="col-lg-4">
+                                <div class="card r-3 SPTCard" style="border-color: #9a90a1">
+                                    <div class="p-4">
+                                        <div class="float-right">
+                                        </div>
+                                        <div class="text-center">
+                                            <h4 class="header_resize_sub" style="color: #70AE6E"><strong>@Html.DisplayNameFor(model => model.Ticket.Type)</strong></h4>
+                                            <hr style="border: 1px solid #70AE6E" />
+                                            <h4 class="text-center header_resize_subTicket" style="color: #70AE6E"><strong>@Html.DisplayFor(model => model.Ticket.Type.Name)</strong></h4>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--#region TICKET COMMENTS TAB-->
+            <div class="tab-pane fade" id="v-pills-com" role="tabpanel" aria-labelledby="v-pills-com-tab">
+                <div class="row">
+                    <div class="col-sm-6">
+                        @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post, new { enctype = "Multipart/form-data", @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken() // it is a security feature....pairs up with [ValidateAntiForgeryToken] to prevent cross site forgery  applies to front and back
+                            @Html.Hidden("TicketId", Model.Ticket.Id)
+                            <div class="col">
+                                <div class="col-md-12">
+                                    @Html.TextArea("Body", new { @class = "mceEditor", rows = 5, cols = 50, placeholder = "Add Comment" })
+                                    <h4 style="text-decoration: underline; color: #70AE6E; font-weight: bold">Upload An Attachment</h4>
+                                    <input name="filePath" type="file" id="fileUpload" />
+                                    <button type="submit" class="btn" style="right: 50px; left: -50px; background-color: #757780; color: white">Submit. </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table" id="myTable">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Creator Name
+                                            </th>
+                                            <th>
+                                                Created Date
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var comment in Model.Ticket.Comments.OrderByDescending(c => c.CreatedDate))
+                                        {
+                                            <tr style="cursor:pointer" data-toggle="modal" data-target="#commentModal-@comment.Id">
+                                                <td>
+                                                    @comment.Owner.FirstName @comment.Owner.LastName
+                                                </td>
+                                                <td>
+                                                    @comment.CreatedDate.ToString("MMM dd,yyyy")
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--#endregion-->
+            <!--#region TICKET HISTORY TAB-->
+            <div class="tab-pane fade" id="v-pills-timeline" role="tabpanel" aria-labelledby="v-pills-timeline-tab">
+                <div class="row">
+                    <div class="col-md-5">
+                        <ul class="timeline">
+                            @foreach (var item in Model.Ticket.History)
+                            {
+
+                                <li class="time-label">
+                                    <h2>
+                                        <span class="badge badge-danger r-3" style=" background-color: #592941; color: white; font-weight: bold ">
+                                            @Html.DisplayFor(model => model.Ticket.UpdatedDate)
+                                        </span>
+                                    </h2>
+                                </li>
+                                <li>
+                                    <i class="ion icon-envelope bg-primary"></i>
+                                    <div class="timeline-item card">
+                                        <div class="card-body text-center" style="background-color: white">
+                                            <h4 style="color: #70AE6E; font-weight: bold; text-decoration: underline">Update:</h4><h3 style="color: #393e41; font-weight: bold"> The @item.Property has been changed from @item.OldValue.FirstOrDefault() to @item.NewValue.ToString()</h3>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--#endregion-->
+            <!--#region EDIT TICKET TAB-->
+            <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                <div class="row">
+                    <div class="col" style="left: -16px; right: 16px;">
+                        <div class="card">
+                            <div class="card-body">
+                                @using (Html.BeginForm("Edit", "Tickets", FormMethod.Post, new { @class = "form-horizontal" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("Id", Model.Ticket.Id)
+                                    @Html.Hidden("CreatedDate", Model.Ticket.CreatedDate)
+                                    @Html.Hidden("AssignedToUserId", Model.Ticket.AssignedToUserId)
+                                    @Html.Hidden("OwnerId", Model.Ticket.OwnerId)
+                                    @Html.Hidden("ProjectId", Model.Ticket.ProjectId)
+
+
+                                    <div class="form-group">
+                                        <label for="inputEmail" class="col-sm-2 control-label">Title</label>
+                                        <div class="col-sm-12">
+                                            @Html.EditorFor(model => model.Ticket.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Ticket.Title, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="inputName" class="col-sm-2 control-label">Summary</label>
+                                        <div class="col-sm-12">
+                                            @Html.EditorFor(model => model.Ticket.Summary, new { htmlAttributes = new { @id = "editor", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Ticket.Summary, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="inputExperience" class="col-sm-2 control-label">Priority</label>
+                                        <div class="col-sm-12">
+                                            @Html.DropDownList("PriorityId", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Ticket.PriorityId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="inputSkills" class="col-sm-2 control-label">Status</label>
+                                        <div class="col-sm-12">
+                                            @Html.DropDownList("StatusId", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Ticket.StatusId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="inputNamea" class="col-sm-2 control-label">Type</label>
+                                        <div class="col-sm-12">
+                                            @Html.DropDownList("TypeId", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Ticket.TypeId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-4 col-sm-10">
+                                            <button type="submit" class="btn btn-danger">Submit</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <!--#endregion-->
+
+
+
+
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    {
+                        <div class="col">
+                            <div class="card" style="left: 16px; right: -16px">
+                                <div class="card-body">
+                                    @Html.Partial("_TicketsAdd", Model.Ticket)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (User.IsInRole("Developer") || User.IsInRole("Submitter"))
+                    {
+                        <div class="col">
+                            <div class="card" style=" height: 500px; left: 16px; right: -16px">
+
+                                <header class="white pt-3 relative shadow  text-white">
+                                    <div class="container-fluid">
+                                        <div class="row p-t-b-10 ">
+                                            <div class="col">
+                                                <div class="pb-3">
+                                                    <div class="image mr-3  float-left">
+                                                    </div>
+                                                    <div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header text-center"><h1 style="color: white">Developer</h1></div>
+                                        <hr class="border" style="width: 2px; color: white" />
+                                        <div class="card card-body devvText">
+                                            @foreach (var user in ticketHelper.ListUsersOnTicket(Model.Ticket.Id))
+                                            {
+                                                <span>@user.FullName</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    }
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+@foreach (var comment in Model.Ticket.Comments.OrderByDescending(c => c.CreatedDate))
+{
+    <div class="modal fade" id="commentModal-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #134a54">
+                    <h2 class="modal-title" id="commentModalLabel" style="color: white">Comment Details</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 style="font-weight: 800">
+                        @Html.Raw(comment.Body)
+                        @if (comment.CommentAttachment != null)
+                        {<h5 style=" text-decoration: underline">Attachment Link</h5>
+                            <a href=@Url.Content(comment.CommentAttachment) target="_blank">@comment.CommentAttachment.Split('/')[2]</a>
+                        }
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section scripts {
+
+    <script>
+     @foreach (var user in Model.Developers)
+     {
+
+      @:$("#addUser-@user.Id").click(function() {
+            @:    $.ajax({
+            @:        type: "POST",
+            @:        url: '@Url.Action("AjaxAddToTicket", "Admin")',
+            @:        data: { id: '@user.Id', ticketId: @Model.Ticket.Id },
+            @:        success: function (partial)
+            @:           {
+            @:             $("#AssignedDeveloperDiv").html(partial)
+            @:           }
+            @:    });
+            @:})
+
+     }
+
+    </script>
+
+    @*<script>
+              $("#removeUser").click(function () {
+                 var url = '@Url.Action("AjaxRemoveUserFromTicket", "Admin")'
+                  $.ajax({
+                      type: "POST",
+                      url: url,
+                      data: {
+                          ticketId: '@Model.Ticket.Id',
+                          userId: '@Model.Ticket.AssignedToUserId'
+                      },
+                      success: function (partial)
+                          {
+                            $("#AssignedDeveloperDiv").html(partial)
+                          }
+
+                  });
+              })
+        </script>*@
+
+
+}
+

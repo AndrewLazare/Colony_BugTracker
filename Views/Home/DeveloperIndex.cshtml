@@ -1,0 +1,58 @@
+﻿@using COLONY_THE_BUGTRACKER.Models
+@using Microsoft.AspNet.Identity
+
+
+
+
+@{
+    var db = new ApplicationDbContext();
+    var user = db.Users.Find(User.Identity.GetUserId());
+    ViewBag.Title = $"Welcome {user.FullName}";
+
+}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card ">
+            <div class="card-header white text-center">
+                <h3><strong class="number" style="color: white">Number Of Tickets Per Priority</strong></h3>
+            </div>
+
+            <div id="graph_dev" class="height-300" style="color: white"></div>
+
+        </div>
+    </div>
+
+
+    <div class="col-md-6">
+
+        <div class="card" style="height: 700px">
+            <div class="card-body">
+                @Html.Partial("_ListHomePartial")
+                </div>
+            </div>
+
+        </div>
+
+</div>
+
+@section Scripts{
+
+    <script>
+        $(function () {
+            var url = '@Url.Action("ProduceBarData", "Graphing")';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'graph_dev',
+                    data: response,
+                    xkey: 'label',
+                    ykey: ['value'],
+                    labels: ['Ticket Count'],
+                     labelColor: '#fff',
+                    resize: true
+                });
+
+            });
+        });
+
+    </script>
+}

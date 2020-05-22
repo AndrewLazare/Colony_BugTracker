@@ -1,0 +1,145 @@
+﻿@using COLONY_THE_BUGTRACKER.Models
+@using COLONY_THE_BUGTRACKER.Utilities
+@model COLONY_THE_BUGTRACKER.Models.Project
+
+@{
+    ViewBag.Title = "Home Index";
+    var roleHelper = new RoleHelper();
+    var projHelper = new UserProjectHelper();
+
+}
+
+<header class="white pt-3 relative shadow  text-white">
+    <div class="container-fluid">
+        <div class="row p-t-b-10 ">
+            <div class="col">
+                <div class="pb-3">
+                    <div class="image mr-3  float-left">
+                    </div>
+                    <div>
+                        <h1 class="p-t-10 number text-center" style="font-weight: bold">Users On Project</h1>
+
+                    </div>
+                    <hr style="border: 1px solid white" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <ul class="nav nav-material responsive-tab" id="v-pills-tab" role="tablist">
+                <li>
+                    <a class="nav-link active" id="v-pills-man1-tab" data-toggle="pill" href="#v-pills-man1" role="tab" aria-controls="v-pills-man1">
+                        <i class="icon icon-home2"></i>Manager
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" id="v-pills-dev1-tab" data-toggle="pill" href="#v-pills-dev1" role="tab" aria-controls="v-pills-dev1" aria-selected="false"><i class="icon icon-cog"></i>Developers</a>
+                </li>
+                <li>
+                    <a class="nav-link" id="v-pills-sub1-tab" data-toggle="pill" href="#v-pills-sub1" role="tab" aria-controls="v-pills-sub1" aria-selected="false"><i class="icon icon-cog"></i>Submitters</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="container-fluid animatedParent animateOnce my-3">
+    <div class="animated fadeInUpShort">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-man1" role="tabpanel" aria-labelledby="v-pills-man1-tab">
+                <div class="row">
+                    <div class="col">
+                        <table class="table table-bordered table-hover data-tables">
+                            <thead style="background-color: #393E41">
+                                <tr>
+                                    <th style="color: white">
+                                        Project Manager
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var projManager = Model.Users.FirstOrDefault(pm => roleHelper.ListUserRoles(pm.Id).First() == "Manager");
+                                }
+                                @if (projManager != null)
+                                {
+                                    <tr>
+                                        <td>
+                                            <h6 class="p-t-10">
+                                                @projManager.FirstName @projManager.LastName
+                                            </h6>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade " id="v-pills-dev1" role="tabpanel" aria-labelledby="v-pills-dev1-tab">
+                <div class="row">
+                    <div class="col">
+                        <table class="table table-bordered table-hover data-tables">
+                            <thead style="background-color: #393E41">
+                                <tr>
+                                    <th style="color: white">
+                                        Developers
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-weight: bold">
+                                @{
+                                    var projDevelopers = Model.Users.Where(pd => roleHelper.ListUserRoles(pd.Id).First() == "Developer");
+                                }
+                                @foreach (var dev in projDevelopers)
+                                {
+                                    <tr>
+                                        <td>
+                                            <h6 class="p-t-10">
+                                                @dev.FirstName @dev.LastName
+                                            </h6>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="v-pills-sub1" role="tabpanel" aria-labelledby="v-pills-sub1-tab">
+                <div class="row">
+                    <div class="col">
+                        <table class="table table-bordered table-hover data-tables">
+                            <thead style="background-color: #393E41">
+                                <tr>
+                                    <th style="color: white">
+                                        Submitters
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var projectHelper = new ProjectHelper();
+                                    var projectSubmitters = new List<ApplicationUser>();
+                                    foreach (var ticket in Model.Tickets)
+                                    {
+                                        projectSubmitters.Add(ticket.Owner);
+                                    }
+                                }
+                                @foreach (var sub in projectSubmitters)
+                                {
+                                    <tr>
+                                        <td>
+
+                                            @sub.FirstName @sub.LastName
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

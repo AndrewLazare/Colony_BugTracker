@@ -1,0 +1,108 @@
+﻿@model IEnumerable<COLONY_THE_BUGTRACKER.Models.ManageRolesViewModel>
+@{
+    ViewBag.Title = "Manage User Roles";
+}
+
+<style>
+    .cntrlWide {
+        width: 100%
+    }
+</style>
+<style>
+    .cntrlTall {
+        height: 50px
+    }
+</style>
+<style>
+    .cntrlHalf {
+        width: 100%
+    }
+</style>
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body" style="align-content: center">
+                    <div class="col">
+                        <div class="row">
+
+                            <h1 style="text-align: center; color: white; margin-left: 150px"><strong>Select One Or More Users</strong> </h1>
+                        </div>
+                        <div class="row">
+                            <h4 style="text-align: center; color: white; margin-left: 200px"><strong>  (hold ctrl to select multiple)</strong> </h4>
+                        </div>
+
+
+
+
+                        <div class="row">
+                            <div class="col-md-12" style="min-height: 300px">
+
+                                <span class="number" style="font-size: 15px; font-weight: bold; min-height: 500px">  @Html.ListBox("UserIds", null, new { @class = "cntrlWide", style = "min-height: 300px", @required = "required" })</span>
+                            </div>
+                        </div>
+                        <hr style="border: 18px solid #0074e1" />
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="number" style="font-size: 18px; font-weight: bold">     @Html.DropDownList("Role", null, "-- Click Here To Select The Roll --", new { @class = "cntrlWide cntrlTall" })</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn cntrlHalf" style="font-weight: bold; background-color: #393E41; color: white">Submit Role Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-xs-6" @*style="margin-left: 100px"*@>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table" id="myTable">
+                        <thead style="background-color: #393E41; color: white">
+                            <tr>
+                                <th>
+                                    @Html.DisplayName("User Name")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Role")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(model => user.UserName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => user.RoleName)
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+}

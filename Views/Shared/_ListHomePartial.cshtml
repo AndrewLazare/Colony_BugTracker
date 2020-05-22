@@ -1,0 +1,201 @@
+﻿@using COLONY_THE_BUGTRACKER.Utilities
+@using Microsoft.AspNet.Identity;
+
+
+
+@{
+    ViewBag.Title = "Home Index";
+    var roleHelper = new RoleHelper();
+    var ticketHelper = new TicketHelper();
+    var projectHelper = new ProjectHelper();
+}
+
+<style>
+    .hoverWhite:hover {
+        color: #134A54;
+        font-weight: bolder
+    }
+</style>
+<header class="white pt-3 relative shadow  text-white">
+    <div class="container-fluid">
+        <div class="row p-t-b-10 ">
+            <div class="col">
+                <div class="pb-3">
+                    <div class="image mr-3  float-left">
+                    </div>
+                    <div>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <h1 class="p-t-10 text-center" style="text-decoration: underline; font-weight: bold">Admin Overview</h1>
+                            <h4 class="p-t-10 text-center" style="font-weight: bold">Click to see each entry's detail page.</h4>
+                        }
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <h1 class="p-t-10 text-center" style="text-decoration: underline; font-weight: bold">Manager Overview</h1>
+                            <h4 class="p-t-10 text-center" style="font-weight: bold">Click to see each entry's detail page.</h4>
+
+                        }
+                        @if (User.IsInRole("Developer"))
+                        {
+                            <h1 class="p-t-10 text-center" style="text-decoration: underline; font-weight: bold">Developer Overview</h1>
+                            <h4 class="p-t-10 text-center" style="font-weight: bold">Click to see each entry's detail page.</h4>
+
+                        }
+                        @if (User.IsInRole("Submitter"))
+                        {
+                            <h1 class="p-t-10 text-center" style="text-decoration: underline; font-weight: bold">Submitter Overview</h1>
+                            <h4 class="p-t-10 text-center" style="font-weight: bold">Click to see each entry's detail page.</h4>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <ul class="nav nav-material responsive-tab" id="v-pills-tab" role="tablist">
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="nav-link active" id="v-pills-proj-tab" data-toggle="pill" href="#v-pills-proj" role="tab" aria-controls="v-pills-proj">
+                            <i class="icon icon-home2"></i>All Projects
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="v-pills-tick-tab" data-toggle="pill" href="#v-pills-tick" role="tab" aria-controls="v-pills-tick" aria-selected="false"><i class="icon icon-cog"></i>All Tickets</a>
+                    </li>
+                }
+                @if (!User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="nav-link active" id="v-pills-proj-tab" data-toggle="pill" href="#v-pills-proj" role="tab" aria-controls="v-pills-proj">
+                            <i class="icon icon-home2"></i>My Projects
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="v-pills-tick-tab" data-toggle="pill" href="#v-pills-tick" role="tab" aria-controls="v-pills-tick" aria-selected="false"><i class="icon icon-cog"></i>My Tickets</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</header>
+
+
+<!--#region Admin List-->
+<div class="container-fluid animatedParent animateOnce my-3">
+    <div class="animated fadeInUpShort">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-proj" role="tabpanel" aria-labelledby="v-pills-proj-tab">
+                <div class="row">
+                    <div class="col">
+                        <table class="table table-bordered table-hover data-tables" style="font-weight: bold">
+                            <thead style="background-color: #393E41; color: white">
+                                <tr>
+                                    <th>
+                                        Title
+                                    </th>
+                                    <th>
+                                        Created Date
+                                    </th>
+                                    <th>
+                                        Updated Date
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var project in projectHelper.ListUserProjects(User.Identity.GetUserId()))
+                                {
+                                    <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("Details", "Projects", new { id = project.Id })'">
+                                        <td>
+                                            @Html.DisplayFor(p => project.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(p => project.CreatedDate)
+                                        </td>
+                                        @if (project.UpdatedDate != null)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(p => project.UpdatedDate)
+                                            </td>
+
+                                        }
+                                        @if (project.UpdatedDate == null)
+                                        {
+                                            <td>
+                                                Not Avaliable.
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--#endregion-->
+            <!--#region Manager List-->
+            <div class="tab-pane fade" id="v-pills-tick" role="tabpanel" aria-labelledby="v-pills-tick-tab">
+                <div class="row">
+                    <div class="col">
+                        <table class="table table-bordered table-hover data-tables" style="font-weight: bold">
+                            <thead style="background-color: #393E41; color: white">
+                                <tr>
+                                    <th>
+                                        Project Name
+                                    </th>
+                                    <th>
+                                        Owner
+                                    </th>
+                                    <th>
+                                        Priority
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Title
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ticket in ticketHelper.ListMyTickets())
+                                {
+                                    <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("Details", "Tickets", new { id = ticket.Id })'">
+                                        <td>
+                                            @Html.DisplayFor(modelTicket => ticket.Project.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelTicket => ticket.Owner.FullName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelTickettem => ticket.Priority.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelTicket => ticket.Status.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelTicket => ticket.Type.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelTicket => ticket.Title)
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--#endregion-->
+
+
+        </div>
+    </div>
+</div>
